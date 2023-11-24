@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { formRequest } from "./_form-server";
 import { ButtonOutline, ButtonPrimary } from "./components/buttons";
 import { AnagramFormType } from "./_types";
-import { FormControl, FormHint } from "./components/forms";
+import { FormControl, FormError, FormHint } from "./components/forms";
 
 export const AnagramForm: React.FC = () => {
   const [showHints, setShowHints] = useState<boolean>(false);
@@ -79,10 +79,16 @@ export const AnagramForm: React.FC = () => {
         </label>
         <input
           id="anagram"
-          {...register("anagram", { required: true, maxLength: 100 })}
+          {...register("anagram", {
+            required: true,
+            maxLength: { value: 100, message: "100 Max Characters" },
+          })}
           type="text"
           className="bg-neutral-800 h-10 rounded-md w-full px-2 border border-neutral-600"
         />
+        {errors.anagram?.message && (
+          <FormError>{errors.anagram?.message}</FormError>
+        )}
         <FormHint>A Shrew Most Moist, Intellectual Orangutan...</FormHint>
       </FormControl>
 
@@ -94,10 +100,15 @@ export const AnagramForm: React.FC = () => {
             </label>
             <input
               id="category"
-              {...register("category", { maxLength: 40 })}
+              {...register("category", {
+                maxLength: { value: 100, message: "100 Max Characters" },
+              })}
               type="text"
               className="bg-neutral-800 h-10 rounded-md w-full px-2 border border-neutral-600"
             />
+            {errors.category?.message && (
+              <FormError>{errors.category?.message}</FormError>
+            )}
             <FormHint>Sports, Music, Film...</FormHint>
           </FormControl>
 
@@ -107,9 +118,14 @@ export const AnagramForm: React.FC = () => {
             </label>
             <textarea
               id="clue"
-              {...register("clue", { maxLength: 120 })}
-              className="bg-neutral-800 h-10 rounded-md w-full px-2 border border-neutral-600 min-h-[40px] max-h-[120px]"
+              {...register("clue", {
+                maxLength: { value: 120, message: "120 Max Characters" },
+              })}
+              className="bg-neutral-800 h-10 rounded-md w-full px-2 py-1.5 border border-neutral-600 min-h-[40px] max-h-[120px]"
             />
+            {errors.clue?.message && (
+              <FormError>{errors.clue?.message}</FormError>
+            )}
             <FormHint>
               A film, a famous poet, a catchphrase, a town in Belgium...
             </FormHint>
@@ -121,12 +137,18 @@ export const AnagramForm: React.FC = () => {
             </label>
             <input
               id="wordCount"
-              {...register("noOfWords", { min: 1, max: 10 })}
+              {...register("noOfWords", {
+                min: { value: 1, message: "1 Min Value" },
+                max: { value: 10, message: "10 Max Value" },
+              })}
               type="number"
               min={1}
               max={10}
               className="bg-neutral-800 h-10 rounded-md px-2 w-6/12 border border-neutral-600"
             />
+            {errors.noOfWords?.message && (
+              <FormError>{errors.noOfWords?.message}</FormError>
+            )}
             <FormHint>Do you know how many words to expect?</FormHint>
           </FormControl>
         </div>

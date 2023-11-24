@@ -7,3 +7,7 @@ export const FormControl: React.FC<HTMLAttributes<HTMLDivElement>> = (
 export const FormHint: React.FC<HTMLAttributes<HTMLParagraphElement>> = (
   props
 ) => <p className="text-sm text-neutral-400 italic" {...props} />;
+
+export const FormError: React.FC<HTMLAttributes<HTMLParagraphElement>> = (
+  props
+) => <p className="text-sm text-red-600" {...props} />;
