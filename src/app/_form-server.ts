@@ -1,35 +1,37 @@
+"use server";
+
 import OpenAI from "openai";
+import { AnagramFormType, ChatGPTResponseType } from "./_types";
 
-// TODO: replace string with actual types
-type Role = "assistant" | string;
-type FinishReason = "stop" | string;
+const apiKey = process.env.OPENAI_API_KEY;
 
-export type ChatGPTResponseType = {
-  index: number;
-  finish_reason: FinishReason;
-  message: {
-    content: string;
-    role: Role;
-  };
+let openAi: OpenAI;
+
+const createInstance = () => {
+  if (!apiKey) {
+    console.log("No API Key", apiKey);
+    return;
+  }
+  if (openAi) {
+    console.log("Already instantiated");
+    return;
+  }
+  openAi = new OpenAI({
+    apiKey: apiKey,
+    dangerouslyAllowBrowser: true,
+  });
 };
 
-export type AnagramFormType = {
-  anagram: string;
-  category?: string;
-  clue?: string;
-  noOfWords?: number;
-};
+createInstance();
 
 export const formRequest = async (
   form: AnagramFormType
-): Promise<ChatGPTResponseType> => {
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-    dangerouslyAllowBrowser: true,
-  });
-
+): Promise<ChatGPTResponseType | null> => {
+  if (!openAi) {
+    createInstance();
+  }
   const content = createContent(form);
-  const completion = await openai.chat.completions.create({
+  const completion = await openAi.chat.completions.create({
     messages: [{ role: "user", content }],
     model: "gpt-3.5-turbo",
   });
@@ -39,7 +41,7 @@ export const formRequest = async (
 
 const createContent = (form: AnagramFormType) => {
   const { anagram, category, clue, noOfWords } = form;
-  let prompt = `Try to solve this anagram: ${anagram}.`;
+  let prompt = `Try to solve this anagram: "${anagram}".`;
   if (category) {
     prompt += `It is in the category of ${category}.`;
   }
@@ -49,5 +51,12 @@ const createContent = (form: AnagramFormType) => {
   if (noOfWords && noOfWords > 1) {
     prompt += `The answer is made up of ${noOfWords} words`;
   }
+  prompt += logic;
+  prompt += formatting;
   return prompt;
 };
+
+const logic =
+  "It must follow standard anagram rules: The answer must include every letter of the anagram and each letter can only be used once.";
+const formatting =
+  "Please return the answer in the format of 'The anagram {anagram} is most likely to be {answer}'. If there are other possible answers then return them in a new line as 'Other possible answers include: {answers}'";

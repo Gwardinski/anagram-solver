@@ -14,9 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="h-screen w-screen bg-gradient-to-b from-neutral-800 to-neutral-950 bg-no-repeat">
+      <body className="min-h-screen bg-gradient-to-b flex flex-col from-neutral-800 to-neutral-950">
         <main>{children}</main>
-        <footer className="text-neutral-400 absolute bottom-0 w-full justify-center items-center flex h-32 gap-2">
+        <footer className="text-neutral-400 mt-auto w-full h-32 justify-center items-center flex flex-col flex-wrap gap-2">
           v0.1
           <a
             href="https://github.com/Gwardinski"
