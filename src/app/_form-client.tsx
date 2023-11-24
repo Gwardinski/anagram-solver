@@ -40,6 +40,9 @@ export const AnagramForm: React.FC = () => {
   };
 
   const title = watch("anagram");
+  const category = watch("category");
+  const clue = watch("clue");
+  const noOfWords = watch("noOfWords");
 
   if (loading) {
     return (
@@ -52,12 +55,24 @@ export const AnagramForm: React.FC = () => {
   if (message) {
     return (
       <div className="max-w-md flex flex-col items-center justify-center gap-2 w-full border-2 border-neutral-600 rounded-md bg-gradient-radial to-neutral-800 from-neutral-700 px-4 py-8 lg:px-8 shadow-xl">
-        <h4 className="text-lg w-full text-center">
+        <h4 className="text-2xl w-full text-center">
           {capitaliseEveryWord(title)}
         </h4>
-        <p className="w-full py-16 whitespace-pre-line text-center">
-          {`"${message}"`}
-        </p>
+        {noOfWords && <p className="w-full text-center">{noOfWords} words</p>}
+        {category && (
+          <h6 className="w-full text-center">
+            Category: {capitaliseEveryWord(category)}
+          </h6>
+        )}
+        {clue && (
+          <p className="w-full text-center">
+            Clue: {capitaliseEveryWord(clue)}
+          </p>
+        )}
+        <div className="py-8 flex flex-col gap-1 w-full items-center justify-center">
+          <p className="text-sm">The Answer Is:</p>
+          <p className="text-2xl">{`"${message}"`}</p>
+        </div>
         <ButtonPrimary fullWidth onClick={() => onSubmit(getValues())}>
           Not Right?
         </ButtonPrimary>
