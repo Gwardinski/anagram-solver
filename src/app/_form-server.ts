@@ -54,7 +54,9 @@ function extractTextBetweenQuotes(input: string): string | null {
 
 const createContent = (form: AnagramFormType) => {
   const { anagram, category, clue, noOfWords } = form;
-  let prompt = `Try to solve this anagram: "${anagram}". `;
+  let prompt = `I need an 'answer' to this anagram: "${anagram}". `;
+  prompt += logic;
+  prompt += formatting;
   if (category) {
     prompt += `It is in the category of "${category}". `;
   }
@@ -62,13 +64,11 @@ const createContent = (form: AnagramFormType) => {
     prompt += `The clue is: "${clue}". `;
   }
   if (noOfWords && noOfWords > 1) {
-    prompt += `The answer is made up of ${noOfWords} words. `;
+    prompt += `The 'answer' is made up of ${noOfWords} words. `;
   }
-  prompt += logic;
-  prompt += formatting;
   return prompt;
 };
 
 const logic =
-  "The answer must include every letter of the anagram, and each letter can only be used once. ";
-const formatting = "Return only a single answer without any additional text.";
+  "The 'answer' must include every letter of the anagram, and each letter can only be used once. ";
+const formatting = "Return only a single 'answer' without any additional text.";
