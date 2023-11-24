@@ -1,3 +1,11 @@
+// TODO: Expand for proper error handling
+type ErrorCode = 1 | 2;
+
+export type APIResponse<T> = {
+  data?: T;
+  error?: ErrorCode;
+};
+
 type Role = "assistant" | "user" | "system";
 type FinishReason =
   | "stop"

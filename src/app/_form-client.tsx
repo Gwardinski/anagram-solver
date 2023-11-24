@@ -4,13 +4,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { formRequest } from "./_form-server";
 import { ButtonOutline, ButtonPrimary } from "./components/buttons";
-import { ChatGPTResponseType, AnagramFormType } from "./_types";
+import { AnagramFormType } from "./_types";
 import { FormControl, FormHint } from "./components/forms";
 
 export const AnagramForm: React.FC = () => {
   const [showHints, setShowHints] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState<ChatGPTResponseType | null>();
+  const [message, setMessage] = useState<string | null>();
   const {
     register,
     handleSubmit,
@@ -22,22 +22,21 @@ export const AnagramForm: React.FC = () => {
 
   const onSubmit = async (form: AnagramFormType) => {
     setLoading(true);
-    const res = await formRequest(form);
-    setData(res);
-    setLoading(false);
-  };
-
-  const reSubmit = async () => {
-    setLoading(true);
-    const data = await formRequest(getValues());
-    setData(data);
+    const { data, error } = await formRequest(form);
+    if (data) {
+      setMessage(data?.message.content);
+    }
+    if (error) {
+      // TODO: error handling
+      console.log(error);
+    }
     setLoading(false);
   };
 
   const resetForm = () => {
     reset();
     setLoading(false);
-    setData(null);
+    setMessage(null);
   };
 
   const title = watch("anagram");
@@ -50,12 +49,16 @@ export const AnagramForm: React.FC = () => {
     );
   }
 
-  if (data) {
+  if (message) {
     return (
       <div className="max-w-md flex flex-col items-center justify-center gap-2 w-full border-2 border-neutral-600 rounded-md bg-gradient-radial to-neutral-800 from-neutral-700 px-4 py-8 lg:px-8 shadow-xl">
-        <h4 className="text-lg w-full text-center">{title}</h4>
-        <p className="w-full py-16">{data.message.content}</p>
-        <ButtonPrimary fullWidth onClick={reSubmit}>
+        <h4 className="text-lg w-full text-center">
+          {capitaliseEveryWord(title)}
+        </h4>
+        <p className="w-full py-16 whitespace-pre-line text-center">
+          {`"${message}"`}
+        </p>
+        <ButtonPrimary fullWidth onClick={() => onSubmit(getValues())}>
           Not Right?
         </ButtonPrimary>
         <ButtonOutline fullWidth onClick={resetForm}>
@@ -142,3 +145,10 @@ export const AnagramForm: React.FC = () => {
     </form>
   );
 };
+
+function capitaliseEveryWord(input: string): string {
+  return input
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
