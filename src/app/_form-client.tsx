@@ -43,23 +43,27 @@ export const AnagramForm: React.FC = () => {
 
   const title = watch("anagram");
 
-  if (!data && loading) {
-    <div className="max-w-md flex flex-col gap-2 w-full border-2 border-neutral-800 rounded-md bg-neutral-700 px-4 py-8 lg:px-8 shadow-lg h-32">
-      Thinking...
-    </div>;
+  if (loading) {
+    return (
+      <div className="max-w-md flex flex-col gap-2 w-full border-2 border-neutral-800 rounded-md bg-neutral-700 px-4 py-8 lg:px-8 shadow-lg h-32">
+        Thinking...
+      </div>
+    );
   }
 
   if (data) {
-    <div className="max-w-md flex flex-col gap-2 w-full border-2 border-neutral-800 rounded-md bg-neutral-700 p-4 lg:p-8 shadow-lg h-fit">
-      <h4 className="text-lg w-full text-center">{title}</h4>
-      <p className="w-full py-16">{data.message.content}</p>
-      <ButtonPrimary fullWidth onClick={reSubmit}>
-        Not Right?
-      </ButtonPrimary>
-      <ButtonOutline fullWidth onClick={resetForm}>
-        New Anagram
-      </ButtonOutline>
-    </div>;
+    return (
+      <div className="max-w-md flex flex-col gap-2 w-full border-2 border-neutral-800 rounded-md bg-neutral-700 p-4 lg:p-8 shadow-lg h-fit">
+        <h4 className="text-lg w-full text-center">{title}</h4>
+        <p className="w-full py-16">{data.message.content}</p>
+        <ButtonPrimary fullWidth onClick={reSubmit}>
+          Not Right?
+        </ButtonPrimary>
+        <ButtonOutline fullWidth onClick={resetForm}>
+          New Anagram
+        </ButtonOutline>
+      </div>
+    );
   }
 
   return (
